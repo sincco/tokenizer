@@ -16,11 +16,25 @@ To add this package as a local, per-project dependency to your project, simply a
 
 ##Use
 
+###Creation
+
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
+use \Sincco\Tokenizer\Tokenizer;
+
 $userData = [ 'idUser'=>666, 'emailUser'=>'ivan.miranda@sincco.com' ];
 $password = "p4$sw0rD";
 $minutesExpiration = 10;
-Tokenizer::create( $userData, $password, $minutesExpiration );
+echo Tokenizer::create( $userData, $password, $minutesExpiration );
+```
+
+###Validation
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+use \Sincco\Tokenizer\Tokenizer;
+
+$password = "p4$sw0rD";
+$valid = Tokenizer::validate( $token, $password );
 ```
