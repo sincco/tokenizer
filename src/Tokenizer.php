@@ -12,7 +12,7 @@
 # Create & validate a token string for user's data
 # -----------------------
 
-namespace Sincco;
+namespace Sincco\Tools;
 
 final class Tokenizer extends \stdClass {
 
