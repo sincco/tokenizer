@@ -1,5 +1,6 @@
 # tokenizer
-Create and validate token for user data
+Create and validate token for user data.
+This tool simplifies the creation and validation for token with user data, the resulting string can be used as a URL parameter.
 
 ##Installation
 
