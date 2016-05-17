@@ -5,8 +5,22 @@ Create and validate token for user data
 
 To add this package as a local, per-project dependency to your project, simply add a dependency on phpunit/php-token-stream to your project's composer.json file. Here is a minimal example of a composer.json file that just defines a dependency on Tokenizer:
 
+```json
 {
     "require": {
         "sincco/tokenizer": "~1.0"
     }
 }
+```
+
+
+##Use
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+$userData = [ 'idUser'=>666, 'emailUser'=>'ivan.miranda@sincco.com' ];
+$password = "p4$sw0rD";
+$minutesExpiration = 10;
+Tokenizer::create( $userData, $password, $minutesExpiration );
+```
