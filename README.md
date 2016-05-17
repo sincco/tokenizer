@@ -9,7 +9,7 @@ To add this package as a local, per-project dependency to your project, simply a
 ```json
 {
     "require": {
-        "sincco/tokenizer": "~1.0"
+        "sincco/tokenizer": "dev-master"
     }
 }
 ```
