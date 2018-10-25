@@ -14,11 +14,13 @@
 
 namespace Sincco\Tools;
 
+use Defuse\Crypto\Key;
+use Defuse\Crypto\Crypto;
+
 final class Tokenizer extends \stdClass {
 
 	private static $instance;
 	// Default values (allows to use functions in simple form)
-	private $salt = 'ya3R0AKGCHBETW5vJb4eMVY7Qvp9mEVv6LjeSKilrnS9Z98txIBfLgTe4DaYO1zQ';
 	private $password = '66Oetf#kI6U4wYH';
 
 	/**
@@ -60,51 +62,19 @@ final class Tokenizer extends \stdClass {
 	}
 
 	/**
-	 * Creates a string to be used a salt data on encryption / decryption
-	 * @return string
-	 */
-	public function getSalt() {
-		$charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-		$randStringLen = 64;
-		$randString = "";
-		for ($i = 0; $i < $randStringLen; $i++)
-			$randString .= $charset[mt_rand(0, strlen($charset) - 1)];
-		return $randString;
-	}
-
-	/**
-	 * Sets salt string to be used on encryption / decryption
-	 * @param string $salt
-	 */
-	public function setSalt( $salt ) {
-		if(!self::$instance instanceof self)
-			self::$instance = new self();
-		self::$instance->$salt = $salt;
-	}
-
-	/**
 	 * Encrypt data
 	 */
-	private static function encrypt( $data, $password ) {
-		$salt = self::$instance->salt;
-		$password = substr( hash( 'sha256', $salt . $password . $salt ), 0, 32 );
-		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
-		$encrypted = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $password, $data, MCRYPT_MODE_ECB, $iv ) );
-		return self::$instance->cleanData( $encrypted );
+	private static function encrypt( $data, $key ) {
+		$objKey = Key::loadFromAsciiSafeString($key);
+		return Crypto::encrypt($data, $objKey);
 	}
 
 	/**
 	 * Decrypt data
 	 */
-	private static function decrypt( $data, $password ) {
-		$data = self::$instance->cleanData( $data, TRUE );
-		$salt = self::$instance->salt;
-		$password = substr( hash( 'sha256', $salt . $password . $salt ), 0, 32 );
-		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
-		$decrypted = mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $password, base64_decode( $data ), MCRYPT_MODE_ECB, $iv );
-		return $decrypted;
+	private static function decrypt( $data, $key ) {
+		$objKey = Key::loadFromAsciiSafeString($key);
+		return Crypto::decrypt($data, $objKey);
 	}
 
 	/**
