@@ -7,7 +7,7 @@
 #
 # -----------------------
 # @author: Iván Miranda
-# @version: 1.0.0
+# @version: 1.1.0
 # -----------------------
 # Create & validate a token string for user's data
 # -----------------------
