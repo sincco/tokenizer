@@ -7,7 +7,7 @@
 #
 # -----------------------
 # @author: Iván Miranda
-# @version: 1.1.0
+# @version: 1.1.1
 # -----------------------
 # Create & validate a token string for user's data
 # -----------------------
@@ -46,19 +46,23 @@ final class Tokenizer extends \stdClass {
 	 * @return mixed           Returns array with data if token is valid or FALSE if not
 	 */
 	public static function validate( $token, $password = '' ) {
-		if(! self::$instance instanceof self )
-			self::$instance = new self();
-		if( trim( $password ) == '' )
-			$password = self::$instance->password;
-		$token = self::$instance->Decrypt( $token, $password );
-		parse_str( $token, $data );
-		if( isset( $data[ 'exp' ] ) ) {
-			if( intval( time() ) <= intval( $data[ 'exp' ] ) )
-				return $data;
-			else
-				return FALSE;
-		} else
-			return FALSE;
+		try {
+			if(! self::$instance instanceof self )
+				self::$instance = new self();
+			if( trim( $password ) == '' )
+				$password = self::$instance->password;
+			$token = self::$instance->Decrypt( $token, $password );
+			parse_str( $token, $data );
+			if( isset( $data[ 'exp' ] ) ) {
+				if( intval( time() ) <= intval( $data[ 'exp' ] ) )
+					return $data;
+				else
+					return false;
+			} else
+				return false;
+		} catch (\Exception $err) {
+			return false;
+		}
 	}
 
 	/**
@@ -80,7 +84,7 @@ final class Tokenizer extends \stdClass {
 	/**
 	 * Clean data replacing URL characters, allowing using token as URL param
 	 */
-	private function cleanData( $data, $decrypt = FALSE ) {
+	private function cleanData( $data, $decrypt = false ) {
 		$dirty = array("+", "/", "=");
 		$clean = array("_PLS_", "_SLH_", "_EQL_");
 		if( $decrypt )
